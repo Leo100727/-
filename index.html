@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>私密媒体分享 - 登录</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>私密媒体分享</h1>
+        
+        <!-- 错误提示框（默认隐藏） -->
+        <div id="error-alert" class="alert alert-error" style="display: none;"></div>
+        
+        <form class="login-form" onsubmit="validateKey(event)">
+            <div class="form-group">
+                <label for="access-key">访问密钥</label>
+                <input type="text" id="access-key" placeholder="请输入您的访问密钥" required>
+            </div>
+            <button type="submit" class="btn btn-primary">验证并进入</button>
+        </form>
+    </div>
+
+    <script>
+        // 允许的密钥列表（仅前端存储，实际项目需后端验证）
+        const VALID_KEYS = ["key123456", "key789012", "key345678"];
+        
+        // 密钥验证函数
+        function validateKey(event) {
+            event.preventDefault(); // 阻止表单默认提交
+            const inputKey = document.getElementById("access-key").value.trim();
+            const errorAlert = document.getElementById("error-alert");
+            
+            // 清空之前的提示
+            errorAlert.style.display = "none";
+            
+            // 验证密钥
+            if (VALID_KEYS.includes(inputKey)) {
+                // 验证成功，存储状态到本地存储
+                localStorage.setItem("authenticated", "true");
+                localStorage.setItem("accessKey", inputKey);
+                // 跳转到仪表盘
+                window.location.href = "dashboard.html";
+            } else {
+                // 验证失败，显示提示
+                errorAlert.textContent = "无效的访问密钥，请重试！";
+                errorAlert.style.display = "block";
+            }
+        }
+
+        // 检查是否已登录，若已登录直接跳转
+        if (localStorage.getItem("authenticated") === "true") {
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+</html>
